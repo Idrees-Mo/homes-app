@@ -1,11 +1,11 @@
 import { Component } from "@angular/core";
 import { HomeComponent } from "./home/home.component";
-import { RouterOutlet } from "@angular/router";
+import { RouterModule, RouterOutlet } from "@angular/router";
 
 @Component({
   standalone: true,
   selector: "app-root",
-  imports: [HomeComponent, RouterOutlet],
+  imports: [HomeComponent, RouterModule],
   template: `<main>
     <header class="brand-name">
       <img
