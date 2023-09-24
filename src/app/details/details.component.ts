@@ -1,19 +1,46 @@
-import { Component, Inject, OnInit } from "@angular/core";
+import { Component, OnInit, inject } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { ActivatedRoute } from "@angular/router";
+import { HousingService } from "../housing.service";
+import { HousingLocation } from "../housing-location";
 
 @Component({
   selector: "app-details",
   standalone: true,
   imports: [CommonModule],
-  template: ` <p>details works! {{ housingLocationId }}</p> `,
+  template: `
+    <article>
+      <img [src]="housingLocation?.photo" class="listing-photo" />
+      <section class="listing-description">
+        <h2 class="listing-heading">{{ housingLocation?.name }}</h2>
+        <p class="listing-location">
+          {{ housingLocation?.city }} {{ housingLocation?.state }}
+        </p>
+      </section>
+    </article>
+    <section class="listing-features">
+      <h2 class="section-heading">About this housing location</h2>
+      <ul>
+        <li>Units available: {{ housingLocation?.availableUnits }}</li>
+        <li>Does this location have wifi:{{ housingLocation?.wifi }}</li>
+        <li>Does this location have laundry:{{ housingLocation?.laundry }}</li>
+      </ul>
+    </section>
+    <section class="listing-apply">
+      <h2 class="section-heading">Apply now to live here</h2>
+      <button class="primary" type="button">Apply Now</button>
+    </section>
+  `,
   styleUrls: ["./details.component.css"],
 })
-export class DetailsComponent implements OnInit {
-  // route: ActivatedRoute = Inject(ActivatedRoute); // not working !!
-  housingLocationId = 0;
-  constructor(private route: ActivatedRoute) {}
-  ngOnInit(): void {
-    this.housingLocationId = Number(this.route.snapshot.params["id"]);
+export class DetailsComponent {
+  route: ActivatedRoute = inject(ActivatedRoute);
+  housingService: HousingService = inject(HousingService);
+  housingLocation: HousingLocation | undefined;
+
+  constructor() {
+    const housingLocationId = Number(this.route.snapshot.params["id"]);
+    this.housingLocation =
+      this.housingService.getHousingLocationById(housingLocationId);
   }
 }
